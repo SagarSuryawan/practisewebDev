@@ -17,7 +17,7 @@ const cookieOption = {
 
 const register = async(req,res,next) => {
    
-        const {fullName,email,password,avatar = req.body.uploadfile} = req.body;
+        const { fullName,email,password } = req.body;
 
         if(!fullName || !email || !password || !avatar) {
             return new AppError("all feilds are Required",400)

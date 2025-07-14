@@ -1,14 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import  {BsPersonCircle}  from "react-icons/bs";
 
 
 export default function Signup() {
+
+  const [avatar, setAvatar] = useState("");
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
+    avatar: ""
   });
 
   const navigate = useNavigate();
@@ -16,6 +20,11 @@ export default function Signup() {
   const handleSignup = async (e) => {
 
     e.preventDefault();
+    const data = new FormData();
+    data.append("fullName", formData.fullName);
+    data.append("email", formData.email);
+    data.append("password", formData.password);
+    if (avatar) data.append("avatar", avatar);
     console.log("Signup form submitted");
 
     try {
@@ -29,7 +38,7 @@ export default function Signup() {
         navigate("/product");
 } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
-      alert("Registration failed");
+      alert("Registration failed"); 
 }
   };
 
@@ -37,15 +46,25 @@ export default function Signup() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSignup}
+        method="post" 
         enctype="multipart/form-data"
-        className="bg-white p-8 rounded-lg shadow-lg w-96 border-2 flex-col flex items-center justify-center">
+        className="bg-white p-8 rounded-lg shadow-lg w-96 flex-col flex items-center justify-center">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
         
         {/* Avatar */}
-        <input type="file" name="uploadfile" 
-         className="m-auto border-2 border-black-800 w-20 h-20 rounded-full mb-2"
-          />
-          
+       <label htmlFor="profile_uploads" className="cursor-pointer m-3" >
+        { avatar ? (<img src= {avatar} className="w-24 h-24 rounded-full m-auto" />): 
+        (<BsPersonCircle className="w-24 h-24 rounded-full m-auto" /> )}
+       </label>
+
+       <input 
+        type="file"
+        name="profile_uploads"
+        className="hidden" 
+        id="profile_uploads" 
+        // accept=".jpg, .jpeg, .png,"
+        />
+      
 
         <input
           type="text"
