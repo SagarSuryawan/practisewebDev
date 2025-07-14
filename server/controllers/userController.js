@@ -17,9 +17,9 @@ const cookieOption = {
 
 const register = async(req,res,next) => {
    
-        const {fullName,email,password } = req.body;
+        const {fullName,email,password,avatar = req.body.uploadfile} = req.body;
 
-        if(!fullName || !email || !password) {
+        if(!fullName || !email || !password || !avatar) {
             return new AppError("all feilds are Required",400)
         }
 
@@ -33,7 +33,8 @@ const register = async(req,res,next) => {
         const user = await User.create({
             fullName,
             email,
-            password
+            password,
+            avatar
         });
 
         if(!user){

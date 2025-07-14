@@ -25,8 +25,11 @@ const userSchema = new mongoose.Schema({
         minLength: [6,'Password must be at least 6 characters'],
         select:false,
         // maxLength:[10,'Password must be less than 10 characters']
+    },
+    avatar: {
+        type: String,
+        // default: 'https://iconarchive.com/download/i108710/Flat-UI-Icons/User-Interface/user.ico'
     }
-
 }, 
 {
     timestamps:true

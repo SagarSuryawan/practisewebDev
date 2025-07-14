@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
+
 export default function Signup() {
 
   const [formData, setFormData] = useState({
@@ -36,9 +37,16 @@ export default function Signup() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSignup}
-        className="bg-white p-8 rounded-lg shadow-lg w-96"
-      >
-        <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
+        enctype="multipart/form-data"
+        className="bg-white p-8 rounded-lg shadow-lg w-96 border-2 flex-col flex items-center justify-center">
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        
+        {/* Avatar */}
+        <input type="file" name="uploadfile" 
+         className="m-auto border-2 border-black-800 w-20 h-20 rounded-full mb-2"
+          />
+          
+
         <input
           type="text"
           placeholder="Full Name"
