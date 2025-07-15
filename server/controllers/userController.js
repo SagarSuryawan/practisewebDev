@@ -1,6 +1,8 @@
 
 import User from '../models/user.model.js';
 import AppError from '../utils/error.utils.js';
+import uploadOnCloudinary from '../utils/fileUpload.js';
+import fs from 'fs'; // to delete temp file
 
 
 
@@ -16,11 +18,12 @@ const cookieOption = {
 
 
 const register = async(req,res,next) => {
-   
+
+    try {
         const { fullName,email,password } = req.body;
 
-        if(!fullName || !email || !password || !avatar) {
-            return new AppError("all feilds are Required",400)
+        if(!fullName || !email || !password || !req.file) {
+            return next(new AppError("all feilds are Required",400))
         }
 
         // if user exists   
@@ -29,12 +32,24 @@ const register = async(req,res,next) => {
             return next(new AppError("Email Already Exist",400))
         }
 
-        
+        //  Check  avatar was uploaded
+        let avatarUrl = "";
+        if (req.file) {
+        const localPath = req.file.path;
+        const cloudinaryRes = await uploadOnCloudinary(localPath);
+
+        if (!cloudinaryRes) {
+            return next(new AppError("Avatar upload failed", 500));
+        }
+
+         avatarUrl = cloudinaryRes.secure_url;
+        fs.unlinkSync(localPath);
+    }
         const user = await User.create({
             fullName,
             email,
             password,
-            avatar
+            avatar:avatarUrl,
         });
 
         if(!user){
@@ -42,7 +57,7 @@ const register = async(req,res,next) => {
         }
 
         // user save 
-        await user.save();
+        // await user.save();
         user.password = undefined;  // to not send password in response
 
         // user created successfully then login automatocally
@@ -61,12 +76,17 @@ const register = async(req,res,next) => {
             success:true,
             message:"User Created Successfully",
             user
-        })
+        });
+     
+    } catch (error) {
+        next(error)
+    }
+};
+   
+        
+  
 
-       
 
-    
-}
 
 
 

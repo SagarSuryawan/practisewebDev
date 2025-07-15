@@ -7,12 +7,13 @@ import  {BsPersonCircle}  from "react-icons/bs";
 export default function Signup() {
 
   const [avatar, setAvatar] = useState("");
+  const[avatarPreview, setAvatarPreview] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
-    avatar: ""
+    
   });
 
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function Signup() {
   const handleSignup = async (e) => {
 
     e.preventDefault();
+    console.log("Submitting signup form")
     const data = new FormData();
     data.append("fullName", formData.fullName);
     data.append("email", formData.email);
@@ -29,13 +31,21 @@ export default function Signup() {
 
     try {
         const res = await axios.post("http://localhost:5000/api/v1/users/register",
-        formData,
-    // { withCredentials: true }
-  );
+        data,
+        {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+         withCredentials: true })
 
-        console.log("Response:", res.data); // ✅ now this works
+        console.log("Response:", res.data); //  now this works
         alert("User registered successfully!");
-        navigate("/product");
+        navigate("/login");
+        
+        // reset form feilds
+        setFormData({ fullName: "", email: "", password: "" });
+        setAvatar("");
+        setAvatarPreview(null);
 } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
       alert("Registration failed"); 
@@ -47,22 +57,28 @@ export default function Signup() {
       <form
         onSubmit={handleSignup}
         method="post" 
-        enctype="multipart/form-data"
+        encType="multipart/form-data"
         className="bg-white p-8 rounded-lg shadow-lg w-96 flex-col flex items-center justify-center">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
         
         {/* Avatar */}
-       <label htmlFor="profile_uploads" className="cursor-pointer m-3" >
-        { avatar ? (<img src= {avatar} className="w-24 h-24 rounded-full m-auto" />): 
+       <label htmlFor="avatar" className="cursor-pointer m-3" >
+        { avatarPreview ? (<img src= {avatarPreview} className="w-24 h-24 rounded-full m-auto" />): 
         (<BsPersonCircle className="w-24 h-24 rounded-full m-auto" /> )}
        </label>
 
        <input 
         type="file"
-        name="profile_uploads"
+        name="avatar"
         className="hidden" 
-        id="profile_uploads" 
+        id="avatar" 
         // accept=".jpg, .jpeg, .png,"
+        onChange={(e) => {
+            const file = e.target.files[0];
+            setAvatar(file);
+            setAvatarPreview(URL.createObjectURL(file));
+          }
+        }
         />
       
 
@@ -70,7 +86,7 @@ export default function Signup() {
           type="text"
           placeholder="Full Name"
           className="w-full p-2 mb-4 border rounded"
-          value={formData.fullname}
+          value={formData.fullName}
           onChange={(e) =>
             setFormData({ ...formData, fullName: e.target.value })
           }
