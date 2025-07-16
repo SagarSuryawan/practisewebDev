@@ -10,10 +10,10 @@ export const uploadToCloudinary = async (localFilePath) => {
     const result = await cloudinary.uploader.upload(localFilePath, {
       folder: 'uploads',
     });
-    fs.unlinkSync(localFilePath); // remove temp file
+    fs.unlinkSync(localFilePath); // remove temp file if successfully uploaded
     return result;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // remove temp file
+    fs.unlinkSync(localFilePath); // remove temp file if upload fails
     throw error;
   }
 };

@@ -26,6 +26,7 @@ const register = async(req,res,next) => {
         if(!fullName || !email || !password || !req.file) {
             return next(new AppError("all feilds are Required",400))
         }
+        console.log(req.file);
 
         // if user exists   
         const existUser = await User.findOne({email})
