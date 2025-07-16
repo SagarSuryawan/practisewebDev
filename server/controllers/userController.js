@@ -1,8 +1,9 @@
 
 import User from '../models/user.model.js';
 import AppError from '../utils/error.utils.js';
-import uploadOnCloudinary from '../utils/fileUpload.js';
+// import uploadOnCloudinary from '../utils/fileUpload.js';
 import fs from 'fs'; // to delete temp file
+import { uploadToCloudinary } from '../middleware/multer.middleware.js';
 
 
 
@@ -36,14 +37,14 @@ const register = async(req,res,next) => {
         let avatarUrl = "";
         if (req.file) {
         const localPath = req.file.path;
-        const cloudinaryRes = await uploadOnCloudinary(localPath);
+        const cloudinaryRes = await uploadToCloudinary(localPath);
 
         if (!cloudinaryRes) {
             return next(new AppError("Avatar upload failed", 500));
         }
 
          avatarUrl = cloudinaryRes.secure_url;
-        fs.unlinkSync(localPath);
+        // fs.unlinkSync(localPath);
     }
         const user = await User.create({
             fullName,

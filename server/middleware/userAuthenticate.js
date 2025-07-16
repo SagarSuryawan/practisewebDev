@@ -1,7 +1,7 @@
 import JWT from "jsonwebtoken";
 const userAuthenticate = (req, res, next) => {
     const token = req.cookies.token;
-    console.log("TOKEN FROM COOKIE:", token); // Add this
+    // console.log("TOKEN FROM COOKIE:", token); // Add this
 
     if (!token) {
         return res.status(401).json({

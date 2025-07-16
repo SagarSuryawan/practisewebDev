@@ -1,17 +1,21 @@
 import multer from 'multer';
-import {CloudinaryStorage} from 'multer-storage-cloudinary';
-import cloudinary from '../utils/fileUpload';
+import fs from 'fs';
+import cloudinary from '../utils/fileUpload.js';
 
+const upload = multer({ dest: 'temp/' });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params:{
-    folder: 'uploads',
-    allowed_formats:[],
-    transformation: [{width: 500, height: 500, crop: 'limit'}]
+export const uploadToCloudinary = async (localFilePath) => {
+  if (!localFilePath) return null;
+  try {
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      folder: 'uploads',
+    });
+    fs.unlinkSync(localFilePath); // remove temp file
+    return result;
+  } catch (error) {
+    fs.unlinkSync(localFilePath); // remove temp file
+    throw error;
   }
-});
-
-const upload = multer({Storage});
+};
 
 export default upload;
