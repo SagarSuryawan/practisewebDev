@@ -9,7 +9,7 @@
  router.post('/register',upload.single("avatar"), register)
  router.post('/login', login)
  router.post('/logout/:id', logout)
- router.get('/me',userAuthenticate, profile);
+ router.get('/me/:id',userAuthenticate, profile);
  router.get('/logout', userAuthenticate, logout);
 
  
