@@ -21,9 +21,8 @@ function App(){
     <Route path="/login" element={<Login onAuth={() => setIsAuthenticated(true)} />} />
 
     <Route path="/product" element={
-      <Privateroutes>
+  
         <GetProduct />
-      </Privateroutes>
     }/>
 
     {/* <Route path="/check" element={<GetProduct/>} /> */}

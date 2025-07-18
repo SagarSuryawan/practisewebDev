@@ -7,10 +7,13 @@ import  connectdb from './config/dbconnection.js';
 import userRoutes from './routes/user.routes.js'
 import prodcutsRoutes from './routes/products.routes.js';
 import errormiddlewarwe from './middleware/error.middleware.js';
+
 dotenv.config();
 
 connectdb();
 const app = express ()
+
+
 app.use(express.json())
 app.use(cors({
     origin : 'http://localhost:5173',
